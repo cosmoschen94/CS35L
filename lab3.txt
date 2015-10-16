@@ -1,0 +1,133 @@
+1. wget {url} to grab the tar file of coreutils 7.6.
+
+2. unzipped the file using tar -xzvf.
+
+3. read the INSTALL documentation and used the following command to create
+makeFile and installed the coreutils 7.6.
+$ ./configure --prefix=/u/cs/ugrad/chens/coreutilsInstall
+$ make
+$ make install
+
+4. To reproduce the bug on the SEASnet server, I cd into the coreutils-7.6
+/src directory and then used the following command:
+$ ./ls -l
+This command generated the wrong format of date as expected.
+
+5. I redirected into coreutils-7.6 directory and create a new file called
+patch_file. Then I copied and pasted Brady's patch into this new file.
+
+6. Next, I typed the following command:
+$ patch -p1 <patch_file
+I used -p1 to get rid of a/
+
+$ make
+The following was generated:
+
+make  all-recursive
+make[1]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6'
+Making all in lib
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/lib'
+make  all-recursive
+make[3]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/lib'
+make[4]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/lib'
+make[4]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/lib'
+make[3]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/lib'
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/lib'
+Making all in src
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/src'
+make  all-am
+make[3]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/src'
+  CC     ls.o
+  CCLD   dir
+  CCLD   vdir
+  CCLD   ls
+make[3]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/src'
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/src'
+Making all in doc
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/doc'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/doc'
+Making all in man
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/man'
+  GEN    dir.1
+  GEN    vdir.1
+  GEN    ls.1
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/man'
+Making all in po
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/po'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/po'
+Making all in tests
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/tests'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/tests'
+Making all in gnulib-tests
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/gnulib-tests'
+make  all-recursive
+make[3]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/gnulib-tests'
+make[4]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/gnulib-tests'
+make[4]: Nothing to be done for 'all-am'.
+make[4]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/gnulib-tests'
+make[3]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/gnulib-tests'
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6/gnulib-tests'
+make[2]: Entering directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6'
+make[2]: Nothing to be done for 'all-am'.
+make[2]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6'
+make[1]: Leaving directory '/w/home.06/cs/ugrad/chens/CS35L/assign3/lab1/
+coreutils-7.6'
+
+Only certain files like ls.l, dir, vdir, ls, dir.l, vdir.l and ls.o were 
+regenerated. For most of the other directories, no changes were made since 
+I only modified to ls.c.
+
+7. I returned into the coreutils-7.6/src directory and typed the following 
+command:
+$ ./ls -l
+This time the command generated the correct format of date, which is MM DD. 
+This indicated
+the modifiction made by applying the patch to ls.c was successful.
+
+8. In order to my change fixed the bug, I created two files in the /src 
+directory by the
+following:
+$ touch new_file
+$ touch -t 201401010101 test_file
+
+Then I typed the command below:
+$ ./ls -l
+
+And the following were generated:
+-rw-r--r-- 1 chens csugrad      0 Oct 12 23:39 new_file
+-rw-r--r-- 1 chens csugrad      0 Jan  1  2014 test_file
+
+9. Lastly, I redirected into the coreutilsInstall/bin directory and typed 
+the command below:
+$ ./ls -l
+This time the command generated the incorrect format of date, as we expected.
