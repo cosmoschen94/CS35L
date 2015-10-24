@@ -1,0 +1,51 @@
+1. First I switched to a new branch called "quote"
+$ git checkout v3.0 -b quote
+
+2. Next I applied the patch
+$ patch -p1 < ./quote-3.0-patch.txt
+
+3. After learning the Emacs function, I added change log entry to file 
+"ChangeLog". There were 6 files needed to be edited.
+C-x 4 a
+
+Then I typed the following to each file:
+Change all ` to ', excepts ` in commentary and documentation
+
+4. I commited the changes to the new branch "quote"
+$ git add .
+$ git commit -F ChangeLog
+
+5. Next I generated a file formatted-patch.txt
+$ git format-patch -1 --stdout > formatted-patch.txt
+
+6. After I exchanged formatted-patch.txt with my partner, I checked out 
+version 3.0 again into a new temp branch "partner".
+$ git checkout -f v3.0
+$ git checkout -b partner
+
+7. Then I applied my partner's patch.
+$ git am < ../formatted-patch.txt
+
+8. Partner: Yilin Wang
+After that I repeated the README-hacking instructions
+$ ./bootstrap
+$ ./configure
+$ make
+$ make check
+
+9. I verified the ChangeLog entry
+$ make distdir
+
+Then a directory "diffutils-3.0.1-de3d" was added to the diffutils
+
+Inside "diffutils-3.0.1-de3d", there is "ChangeLog" file, including the 
+commit messages of 6 modified files.
+
+10. Finally I installed the latest XQuartz to connect to the SEASnet server
+ and entered ~eggert/src/gnu/emacs directory. Then using the gitk command, 
+ I obtained a screenshot of my view of the mergepoint.
+$ ssh -X chens@lnxsrv.seas.ucla.edu
+$ cd ~eggert/src/gnu/emacs
+$ gitk
+
+

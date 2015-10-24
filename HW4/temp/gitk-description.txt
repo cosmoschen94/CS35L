@@ -1,0 +1,7 @@
+1. Middletop window: commit author
+2. Lefttop window: commit message
+3. Righttop window: commit date and time
+4. Leftbottom window: parent and child of the commit
+    and file changes in diff format
+5. Rightbottom window: files impacted by selected commit
+

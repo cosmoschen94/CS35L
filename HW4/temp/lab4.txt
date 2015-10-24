@@ -1,0 +1,99 @@
+1. First I installed Git by adding it PATH variable.
+$ export PATH=/usr/local/cs/bin:$PATH
+
+2. I git cloned Diffutils into a new directory called gitroot.
+$ mkdir gitroot
+$ git clone git://git.savannah.gnu.org/diffutils.git
+
+3. I entered the repo and got file git-log.txt and git-tags.txt
+$ cd diffutils
+$ git log > git-log.txt
+$ git tag > git-tags.txt
+
+4. I opened git-log.txt using emacs and found the hash value, copied it 
+and then generated a patch for that commit.
+$ emacs git-log.txt
+$ M-s w maint: qu
+$ git show 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f > quote-patch.txt
+
+5. After generating patch, I checked out Diffutils version 3.0
+$ git checkout v3.0
+
+6. Then I applied quote-patch.txt to version 3.0 and skipped past some 
+files by typing RET
+$ patch -p1 < quote-patch.txt
+
+7. Got an overview of what happened, which showed changes not staged for 
+commit and untracked files.
+$ git status
+
+8. After learning how to manipulate in vc-diff buffer, I looked at all 
+non .c files and reverted all their changes.
+In Emacs: C-x v = C-x v u
+yes RET
+
+9. Then I looked at all .c files using vc-diff buffer and reverted all 
+changes except changes to character-string constants.
+$ C-x v = C-u C-c C-a
+
+I used the following to move among hunks.
+$ M-n
+
+When I was not sure whether the hunk was commentary or character-string 
+constants, I used the following command to enter into the source code.
+$ C-c C-c
+
+10. I examined src/diff.c.rej and src/diff3.c.rej files and manually copied
+ rejected patches into the corresponding .c files.
+
+11. I used the following command to remove untracked files.
+$ git clean -f
+
+12. I saved a patch including all the changes I have made to v3.0 into 
+quote-3.0-patch.txt
+$ git diff > quote-3.0-patch.txt
+
+13. Following the instructions in README-hacking, I built the modified 
+version of Diffutils.
+$ ./bootstrap
+$ ./configure
+$ make
+$ make check
+
+14. Then I verified it does the right thing with
+$ diff . -
+$ diff --help
+
+The first command outputs:
+diff: cannot compare '-' to a directory
+
+The second command outputs:
+...
+FILES are 'FILE1 FILE2' or 'DIR1 DIR2' or 'DIR FILE...' or 'FILE... DIR'.
+...
+
+15. I did a sanity test by comparing source code of my modified version 
+with source code of Diffutils 3.0. I created two directories in the gitroot
+ directory.
+$ mkdir diffutils-3.0
+$ mkdir diffutils-3.0-patch
+
+Then I entered src directory and copied the source code into 
+diffutils-3.0-patch.
+$ cp * ../../diffutils-3.0-patch
+
+Then I checked out v3.0 and copied the source code of Diffutils 3.0 into
+ diffutils-3.0.
+$ git checkout -f v3.0
+$ cp * ../../diffutils-3.0
+
+Finally, I compared two source codes and outputed into a txt file.
+$ diffutils-3.0-patch/diff -pru diffutils-3.0 diffutils-3.0-patch > 
+quote-3.0-test.txt
+
+16. At last, I compared two patches and found the difference is only string 
+literals, which is innocuous.
+$ diff quote-3.0-patch.txt quote-3.0-test.txt
+
+
+
