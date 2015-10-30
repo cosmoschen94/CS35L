@@ -1,0 +1,72 @@
+1. Downloaded old version of Coreutils with bugs, then unzip
+$ wget http://web.cs.ucla.edu/classes/fall15/cs35L/assign/coreutils-with-bug.tar.gz
+$ tar -xvf coreutils-with-bug.tar.gz
+
+2. Tried to build old version
+$ ./configure
+$ make
+
+It successfully configured but failed to make. The problem lies in the "futimens" function in the utimecmp.c and utimecmp.h files.
+
+
+3. Downloaded the patch then applied the patch
+$ wget http://web.cs.ucla.edu/classes/fall15/cs35L/assign/coreutils.diff
+$ patch -p0 < coreutils.diff
+
+Output:
+lib/utimens.c, lib/utimens.h, src/copy.c, src/tee.c, src/touch.c were patched.
+
+4. Tried to rebuild this patched version
+$ ./configure
+$ make
+
+This time it was built successfully without errors because the patch renamed tee into coreutils_tee and futimens into coreutils_futimens, which were actually used in the source file.
+
+5. To reproduce the bug
+
+$ tmp=$(mktemp -d)
+$ cd $tmp
+$ touch -d '1918-11-11 11:00 GMT' wwi-armistice
+$ touch now
+$ sleep 1
+$ touch now1
+$ cd ~/CS35L/assign5/coreutils-with-bug/src
+$ ./ls -lt --full-time /tmp/wwi-armistice /tmp/now /tmp/now1
+
+
+Output:
+-rw-r--r-- 1 ronaq csugrad 0 1918-11-11 03:00:00.000000000 -0800 /tmp/wwi-armistice
+-rw-r--r-- 1 ronaq csugrad 0 2015-10-27 14:14:53.896411348 -0700 /tmp/now1
+-rw-r--r-- 1 ronaq csugrad 0 2015-10-27 14:14:36.388957248 -0700 /tmp/now
+
+6. Tried to debug
+
+I first looked at the source code in ls.c and found that the function cmp_mtime was called many times and it was related to comparing times, so I set a breakpoint at that function in gdb. As I went through the instructions using si, I found that cmp_mtime called another function named timespec_cmp in /lib/timespec.h:49:
+
+timespec_cmp (b=..., a=...) at ../lib/timespec.h:49
+49	       return diff ? diff : a.tv_nsec - b.tv_nsec;
+
+Then I went into that source file timespec.h and looked at the function itself:
+
+timespec_cmp (struct timespec a, struct timespec b)
+{
+  int diff = a.tv_sec - b.tv_sec;
+  return diff ? diff : a.tv_nsec - b.tv_nsec;
+}
+
+As we can see here, there will be an integer overflow when the time of wwi-armistice and now are compared. This happens because in the gdb mode, as I kept track of the values that each register held, I found that the diff value wasn't correct because of integaer overflow. Therefore, we can fix this bug by changing the type of diff into "long long int", which can hold the large value, and cast this type to a.tv_nsec and b.tv_nsec as well. Further, we need to change return statement into conditional returns that will check whether diff is greater, smaller than or equal to zero and return corresponding values.
+
+Then I copied timespec.h and fixed the bug inside that copy. Inside Emacs, I recorded what I changed by opeing the ChangeLog:
+C-x 4 a
+
+At last, I generated lab5.diff by the following:
+$ diff -u ./coreutils-with-bug/lib/timespec.h timespec-with-fix.h > lab5.diff
+
+7.
+When I tried to reproduce the problem in the SEASnet server, I got the following output: 
+
+-rw-r--r-- 1 chens csugrad 0 2054-12-17 09:28:16.000000000 -0800 wwi-armistice
+-rw-r--r-- 1 chens csugrad 0 2015-10-29 18:44:11.987580000 -0700 now1
+-rw-r--r-- 1 chens csugrad 0 2015-10-29 18:44:05.828500000 -0700 now
+
+As we can see, the timestamp of wwi-armistice is not correct. This happens because the SEASnet NFS filesystem has unsigned 32-bit time stamps while the Local File System on Linux server has signed 32-bit time stamps. A negative value will be interpreted into a positive value. So if we touch wwi-armistice on NFS filesystem, the local file system will return a time stamp around 2054. In order to avoid this problem, we have to touch this file on local file system.

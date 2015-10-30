@@ -1,0 +1,18 @@
+--- ChangeLog: In "timespec_cmp" function, changed "int" into "long long int" and casting "long long int" for a.tv_sec and b.tv_sec.
+--- ./coreutils-with-bug/lib/timespec.h	2005-09-21 23:05:39.000000000 -0700
++++ timespec-with-fix.h	2015-10-29 17:33:01.316195000 -0700
+@@ -45,8 +45,12 @@
+ static inline int
+ timespec_cmp (struct timespec a, struct timespec b)
+ {
+-  int diff = a.tv_sec - b.tv_sec;
+-  return diff ? diff : a.tv_nsec - b.tv_nsec;
++  long long int diff = (long long int)a.tv_sec - (long long int)b.tv_sec;
++  if (!diff)
++    return 0;
++  else if (diff < 0)
++    return -1;
++  return 1;
+ }
+ 
+ # if ! HAVE_DECL_NANOSLEEP
