@@ -1,0 +1,22 @@
+Answers:
+
+1. Even though other teams had been observing all the bytes goint across the network,
+it would be secure becuase the bytes are encrypted and since other teams don't have the
+private key, they cannot decrypt the message digest.
+
+(1) In this case, our data won't be secure when sent across the netword since other teams
+can see what we have typed for the username and password. Therefore they can obtain the
+private key to decrypt our data.
+
+(2) In this case, it would be very insecure since other teams now have access to
+the private key and can decrypt our data. 
+
+
+2. The gpg --verify command can only verify document integrity but it cannot prove origin.
+When person B pretend to be preson A and send a document with message digest algorithm and
+B's public key to person C, person C will use B's public key to decrypt B's message digest
+and compare with B's document without encryption. Then C will find out that the message is
+transmitted correctly without modification. However, C will not know that it is B but not A
+who sends the document. Therefore, we need a trusted third party authority(certificate authority)
+to verify the identity of the sender based on their issued digital certificate which certificate
+the ownership of the public key by the named subject of the certificates.

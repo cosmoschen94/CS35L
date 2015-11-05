@@ -17,9 +17,13 @@ int frobcmp(char const * a, char const * b)
   while ((*a != 32) && (*b != 32))
     {
       if ((*a^42) > (*b^42))
-	return 1;
+	{
+	  return 1;
+	}
       else if ((*a^42) < (*b^42))
-	return -1;
+	{
+	  return -1;
+	}
       a++;
       b++;
     }
@@ -30,10 +34,14 @@ int frobcmp(char const * a, char const * b)
 
   //a is a prefix of b
   if ((*a == 32) && (*b != 32))
-    return -1;
+    {
+      return -1;
+    }
   //b is a prefix of a
   else if ((*a != 32) && (*b == 32))
-    return 1;
+    {
+      return 1;
+    }
 
   //both are equal
   return 0;
@@ -77,11 +85,15 @@ int main()
   /////////////////main body of this program////////////////////
   //////////////////////////////////////////////////////////////
 
-
+  /*
+    Fixed bugs:
+    1. Remove the newline character '\n' at the end of standard input
+    2. Append a trailing space at the end of the char array
+   */
 
   
   //pre-allocate a chunk of memory
-  int pre_allocate = 1024;
+  int pre_allocate = 10;
   char *char_input_array = (char*)malloc(sizeof(char)*pre_allocate);
   
   //report error when memory allocation fails
@@ -97,7 +109,6 @@ int main()
   
   for(i=0;(char_in = getchar()) != EOF;++i)
     {
-      
       //reach the end of the memory chunk, need to reallocate memory
       if(i == pre_allocate)
 	{
@@ -113,15 +124,21 @@ int main()
 	  //update allocation size
 	  pre_allocate *=2;
 	}
-
+    
       
       //count how many words seperated by space in the array
       if((char)char_in == ' ')
-	countWord++;
+	{
+	  countWord++;
+	}
+	
 
       //avoid adding a newline at the end of input
       if((char)char_in == '\n')
-	break;
+	{
+	  break;
+	}
+
       
       //store char into the array
       char_input_array[i]=(char)char_in;
@@ -168,8 +185,10 @@ int main()
 
       //reach the end of the array of char pointers
       if (k == (countWord -1))
-	break;
-
+	{
+	  break;
+	}
+       
       //voyager keep moving forward till next space
       while(*voyager != ' ')
 	{
@@ -192,12 +211,22 @@ int main()
 
       putchar(*extractor);
 
+      //extractor keep moving forward till the end of the word
       while (*extractor != ' ')
 	{
 	  extractor++;
 	  putchar(*extractor);
 	}
     }
+
+  //error flag is set during output
+  if (ferror(stdout))
+    {
+      fprintf(stderr, "putchar failed\n");
+    }
+  
+  free(char_input_array);
+  free(ptrToWord);
 
 
   
