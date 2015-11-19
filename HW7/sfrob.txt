@@ -1,0 +1,128 @@
+1. In this hw, we need to modify sfrob.c from HW5 to use read and write syscalls.
+2. After modification to the sfrob.c and name it into sfrobu.c, I write a python
+script to generate a file more than 500000 bytes.
+
+bigfile.py:
+
+#!/usr/bin/env python
+from struct import *
+
+buf = '*~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4'
+buf += ' *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4'*10000
+
+f = open("test.txt", "w")
+f.write(buf)
+
+3. Use time command to compare sfrob and sfrobu
+$ time ./sfrob < test.txt
+
+real   0m0.064s
+user   0m0.049s
+sys    0m0.008s
+
+$ time ./sfrobu < test.txt
+
+Comparisons: 1304022
+real   0m0.842s
+user   0m0.075s
+sys    0m0.760s
+
+As we can see above, sfrob performs better than sfrobu since sfrobu makes
+a lot of syscalls, which slows down the program. This result is consistent
+with the lab section.
+
+Estimate the number of comparisons as a function of the number of input lines:
+
+# Input lines	    # Comparisons
+  10		      459
+  100		      7372
+  500		      46640
+  1000		      101780
+  1500		      160672		      
+  5000		      609469
+  10000		      1303920
+
+
+After I run a regression analysis, I obtain an equation to calculate
+the number of comaprisons based on the number of input lines:
+
+# Comparisons = 130 * # Input lines - 19862
+
+And the correlation coefficient r = 0.999, which is almost perfect
+to estimate using this equation. However, the equation fails when
+# Input lines is considerably small.
+
+4. Create a shell script sfrobs, then compare its performance with other
+two programs.
+
+$ time printf '*~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA
+ *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+  #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO 
+  *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY
+   #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+    *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER
+     #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS
+      #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+       *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO
+        #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA
+         *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY
+          #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+           *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+            *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+             #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+              *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+               *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+                #^BO #FKPS #NEM\4' | ./sfrobs
+
+real   0m0.007s
+user   0m0.000s
+sys    0m0.009s
+
+$ time printf '*~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA
+ *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+  #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO 
+  *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY
+   #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+    *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER
+     #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS
+      #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+       *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO
+        #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA
+         *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY
+          #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+           *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+            *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+             #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+              *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+               *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+                #^BO #FKPS #NEM\4' | ./sfrob
+
+real	0m0.002s
+user	0m0.000s
+sys		0m0.002s
+
+$ time printf '*~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA
+ *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+  #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO 
+  *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY
+   #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+    *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER
+     #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS
+      #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+       *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO
+        #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA
+         *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY
+          #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+           *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+            *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+             #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4
+              *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D
+               *LER #@_GZY #E\\OX #^BO #FKPS #NEM\4 *~BO *{_CIA *hXE]D *LER #@_GZY #E\\OX
+                #^BO #FKPS #NEM\4' | ./sfrobu
+
+real	0m0.003s
+user	0m0.001s
+sys		0m0.003s
+
+As we can see, sfrob still does the best performance while sfrobu is just slightly slower than sfrob. However, sfrobs 
+has the worst performance.

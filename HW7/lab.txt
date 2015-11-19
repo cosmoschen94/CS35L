@@ -1,0 +1,104 @@
+1. Use getchar() and putchar() to read and write from operands from and to. Need to check whether
+there are exactly 2 operands and they are both the same length, otherwise report error.
+
+2. Use read() and write() to read and write from operands from and to. Check errors like above.
+
+3. Before comparing, generate a 5000000 bytes file:
+$ dd if=/dev/urandom of=test1.txt bs=5000000 count=1
+
+(a)When copying one file to another
+$ strace -c ./tr2b 'a' 'b' < test1.txt > test-tr2b.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 33.08    0.000043          22         2           read
+ 16.92    0.000022           2         9           mmap
+ 11.54    0.000015           4         4           mprotect
+  9.23    0.000012          12         1           write
+  6.15    0.000008           4         2           open
+  5.38    0.000007           2         4           fstat
+  5.38    0.000007           7         1           munmap
+  4.62    0.000006           6         1         1 access
+  3.85    0.000005           5         1           execve
+  1.54    0.000002           1         2           close
+  1.54    0.000002           2         1           brk
+  0.77    0.000001           1         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000130                    29         1 total
+
+$ strace -c ./tr2u 'a' 'b' < test1.txt > test-tr2u.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 55.52    5.481269           1   5000000           write
+ 44.48    4.391219           1   5000002           read
+  0.00    0.000048           7         7           mmap
+  0.00    0.000027           7         4           mprotect
+  0.00    0.000013           7         2           open
+  0.00    0.000010          10         1           munmap
+  0.00    0.000008           4         2           close
+  0.00    0.000008           4         2           fstat
+  0.00    0.000007           7         1         1 access
+  0.00    0.000007           7         1           execve
+  0.00    0.000004           4         1           brk
+  0.00    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    9.872624              10000024         1 total
+
+(b)When copying a file to my terminal
+$ strace -c ./tr2b 'a' 'b' < test1.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 29.22    0.000045          23         2           read
+ 22.08    0.000034           4         9           mmap
+ 11.04    0.000017           4         4           mprotect
+  7.14    0.000011          11         1           write
+  7.14    0.000011           3         4           fstat
+  6.49    0.000010           5         2           open
+  5.84    0.000009           9         1           munmap
+  3.90    0.000006           6         1           execve
+  3.25    0.000005           5         1         1 access
+  1.95    0.000003           2         2           close
+  1.30    0.000002           2         1           brk
+  0.65    0.000001           1         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000154                    29         1 total
+
+$ strace -c ./tr2u 'a' 'b' < test1.txt
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 58.65    6.451509           1   5000000           write
+ 41.35    4.548727           1   5000002           read
+  0.00    0.000039           6         7           mmap
+  0.00    0.000029           7         4           mprotect
+  0.00    0.000014           7         2           open
+  0.00    0.000010          10         1           munmap
+  0.00    0.000008           4         2           close
+  0.00    0.000007           4         2           fstat
+  0.00    0.000007           7         1         1 access
+  0.00    0.000007           7         1           execve
+  0.00    0.000004           4         1           brk
+  0.00    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   11.000365              10000024         1 total
+
+As we can see above, in both (a) and (b) cases, tr2b only makes 29 syscalls including  write
+and read, while tr2u makes more than hundreds of thousands syscalls including write and read.
+In tr2u, it utilize syscall for every byte. This creates a huge and obvious difference
+between tr2u and tr2b when given a very large file.
+
+4. Use time command to measure which program uses faster
+$ time ./tr2b 'a' 'b' < test1.txt
+real   0m0.002s
+user   0m0.000s
+sys    0m0.001s
+
+$ time ./tr2u 'a' 'b' < test1.txt
+real   0m5.294s
+user   0m0.250s
+sys    0m4.980s
+
+We can see above two programs differ significantly. This happens because for tr2u,
+it spends most of the time doing syscall for every byte. For tr2b, it uses buffered I/O
+and therefore reduces syscall immensely.
