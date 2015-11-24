@@ -32,27 +32,27 @@ more threads are created.
 
 time ./srt 1-test.ppm >1-test.ppm.tmp
 mv 1-test.ppm.tmp 1-test.ppm
-real		  0m51.410s
-user		  0m51.399s
+real		  0m51.433s
+user		  0m51.425s
 sys		  0m0.002s
 
 time ./srt 2-test.ppm >2-test.ppm.tmp
 mv 2-test.ppm.tmp 2-test.ppm
-real		  0m26.602s
-user		  0m52.683s
-sys		  0m0.000s
+real		  0m25.905s
+user		  0m51.617s
+sys		  0m0.001s
 
 time ./srt 4-test.ppm >4-test.ppm.tmp
 mv 4-test.ppm.tmp 4-test.ppm
-real		  0m13.967s
-user		  0m54.936s
-sys		  0m0.015s
+real		  0m13.574s
+user		  0m53.695s
+sys		  0m0.002s
 
 time ./srt 8-test.ppm >8-test.ppm.tmp
 mv 8-test.ppm.tmp 8-test.ppm
-real		  0m7.262s
-user		  0m55.908s
-sys		  0m0.002s
+real		  0m7.226s
+user		  0m55.744s
+sys		  0m0.003s
 
 8. I used XQuartz to check the image
 $ ssh -X chens@lnxsrv.seas.ucla.edu
