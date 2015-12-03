@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#extract lines with html tag '<tr>' or '<td>'
+grep -E '<tr>|<td>' |
+
+#replace all blank spaces with new lines
+tr '[:blank:]' '\n' |
+
+#remove repeated blank lines
+tr -s '\n' |
+
+#remove all English words
+sed '/<tr>/,/\/td>/d' |
+
+#remove all the HTML tags. But this command will result in blank spaces
+sed 's:<[^>]*>::g' |
+
+#remove repeated blank lines
+tr -s '\n' |
+
+#replace all upper letters into their lower complements
+tr '[:upper:]' '[:lower:]' |
+
+#replace the ASCII grave accent "`" with ASCII apostrophe "'"
+tr '`' "'" |
+
+#delete any \r\n carriage return
+sed 's:\r:\n:g' |
+
+#delete all commas
+tr -d , |
+
+#replace all "'" with "1"
+tr "'" "1" |
+
+#reject any entries that contains non-hawaiian characters
+sed '/[^pk1mnwlhaeiou]/d' |
+
+#replace all "1" with "'"
+tr "1" "'" |
+
+#sort the file
+sort -u

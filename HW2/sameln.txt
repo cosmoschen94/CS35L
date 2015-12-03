@@ -1,0 +1,52 @@
+#!/bin/bash
+
+dir=$1
+
+#first store all dot filenames into the array
+RESULT=`ls -a $dir | grep "^\." | sort`
+declare -a ARRAY
+let count=0
+for FILE in $RESULT
+do
+    if [ ! -L "$dir/$FILE" ]
+    then
+	if [ -f "$dir/$FILE" ]
+	then
+	    ARRAY[$count]="$dir/$FILE"
+	    let count=count+1
+	fi
+    fi
+done
+
+#then store all other filenames into the array
+RESULT=`ls $dir | sort`
+for FILE in $RESULT
+do
+    if [ ! -L "$dir/$FILE" ]
+    then
+	if [ -f "$dir/$FILE" ]
+	then
+	    ARRAY[$count]="$dir/$FILE"
+	    let count=count+1
+	fi
+    fi
+done
+
+#now compare files
+let value1=0
+let end=count-1
+while [ $value1 -lt $end ]
+do
+    let value2=value1+1
+    while [ $value2 -lt $count ]
+    do
+	cmp "${ARRAY[$value1]}" "${ARRAY[$value2]}"
+	if [ $? -eq "0" ]
+	then
+	    rm "${ARRAY[$value2]}"
+	    ln "${ARRAY[$value1]}" "$ARRAY[$value2]}"
+	fi
+	let value2=value2+1
+    done
+    let value1=value1+1
+done

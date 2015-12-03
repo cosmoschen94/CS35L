@@ -1,0 +1,169 @@
+1. l o c a l e Enter
+The output indicateds I was not in the standard C locale.
+
+2. e x p o r t SP L C _ A L L = ' C ' Enter 
+Set the standard C locale.
+
+3. l o c a l e Enter
+This time I was in the standard C locale.
+
+4. s o r t SP - c SP / u s r / s h a r e /  d i c t / w o r d s
+The words file on the SEASnet host is not sorted.
+
+5. s o r t SP - o SP w o r d s SP / u s r / s h a r e / d i c t / w o r d s
+I sorted the words file from the SEASnet host and outputed into my working 
+directory.
+
+6. w g e t SP - O SP a s s i g n 2 . t x t SP h t t p : / / w e b . c s . u 
+c l a . e d u / c l a s s e s / f a l l 1 5 / c s 3 5 L / a s s i g n / a s 
+s i g n 2 . h t m l
+I downloaded the HTML into a text file named assign2.txt in my working dire
+ctory using wget.   
+
+7. t r SP - c SP ' A - Z a - z ' SP ' [ \ n * ] ' SP < a s s i g n 2 . t x t
+ > SP t r 1 . t x t
+This command converts each non-alphabetic characters into a newline. '\n*'
+expands to as many copies of '\n' as needed. 
+
+8. t r SP - c s SP ' A - Z a - z ' SP ' [ \ n * ] ' SP < a s s i g n 2 . t x 
+t > SP t r 2 . t x t
+This command first converts each non-alphabetic characters into a newline 
+like the above command. But this command also squeezes each string of 
+repeated newlines into a single newline.
+
+9. t r SP - c s SP ' A - Z a - z ' SP ' [ \ n * ] ' SP | SP s o r t SP < a 
+s s i g n 2 . t x t > SP t r 3 . t x t
+This command first converts each non-alphabetic characters into a newline
+and squeezes each string of repeated newlines into a single newline like
+the above command. However, this command also sorts the file word by word
+and put each word per line.
+
+10. t r SP - c s SP ' A - Z a - z ' SP ' [ \ n * ] ' SP | SP s o r t SP - u 
+SP < a s s i g n 2 . t x t > SP t r 4 . t x t
+This command does the same thing like the above command except that this com
+mand also remove repeated words.
+
+11. t r SP - c s SP ' A - Z a - z ' SP ' [ \ n * ] ' SP < a s s i g n 2 . t 
+x t SP | SP s o r t SP - u SP | SP c o m m SP - SP w o r d s SP > SP t r 5 
+. t x t
+This command compares the two input files and produces three-column output.
+Column one contains lines unique to assign2.txt, column two contains lines
+unique to words and column three contains lines common to both files.
+
+12. t r SP - c s SP ' A - Z a - z ' SP ' [ \ n * ] ' SP < a s s i g n 2 . t 
+x t SP | SP s o r t SP - u SP | SP c o m m SP - 2 3 SP - w o r d s SP > SP 
+t r 6 . t x t
+This command compares the two input files and produce one-column output.
+The only column contains lines unique to assign2.txt.
+
+13. w g e t SP - O SP E 2 H . t x t SP h t t p : / / m a u i m a p p . c o m
+ / m o o l e l o / h w n w d s e n g . h t m
+I downloaded the HTML into a text file named E2H.txt in my working dire
+ctory using wget.
+
+14. g r e p SP - E SP ' < t r > | < t d > ' SP E 2 H . t x t SP > SP e x t r
+a c t W o r d . t x t
+I used grep to extract lines with html tag '<tr>' or '<td>'.
+
+15. tr '[:blank:]' '\n' < extractWord.txt > replaceBlank.txt
+I used tr to replace all blank spaces with new lines.
+
+16. tr -s '\n' < replaceBlank.txt > removeLine.txt
+I used this command to remove repeated blank lines.
+
+17. sed '/<tr>/,/<\/td>/d' < removeLine.txt > removeEword.txt
+I used this command to remove all English words.
+
+18. s e d SP ' s : < [ ^ > ] * > : : g ' SP r e m o v e E w o r d . t x t SP 
+> SP r e m o v e T a g . t x t
+I used sed command to remove all the HTML tags. But this command will result
+ in blank spaces.
+ 
+19. tr -s '\n' < removeTag.txt > removeRepeat.txt
+I used this command to remove repeated blank lines.
+
+20. t r SP ' [ : u p p e r : ] ' SP ' [ : l o w e r : ] ' SP < SP r e m o v
+ e L i n e . t x t SP > SP U 2 L . t x t
+I used this command to replace all upper letters into their lower complemen
+ts.
+
+21. t r SP ' ` ' SP " ' " SP < SP U 2 L . t x t SP > SP g a 2 a p o . t x t
+I used this command to replace the ASCII grave accent "`" with ASCII apostr
+ophe "'".
+
+22. s e d SP ' s : \ r : \ n : g ' SP < SP g a 2 a p o . t x t SP > SP r e 
+m o v e C a r r i a g e . t x t
+I used this command to delete any \r\n carriage return.
+
+23. t r SP - d SP , SP < SP r e m o v e C a r r i a g e . t x t SP > S
+P r e m o v e C o m m a . t x t 
+I used tr command to replace all commas with new lines.
+
+24. sort -u < removeComma > hwords
+I used this command to sort the file.
+
+25. emacs buildwords.sh
+#!/bin/bash
+
+#extract lines with html tag '<tr>' or '<td>'
+grep -E '<tr>|<td>' |
+
+#replace all blank spaces with new lines
+tr '[:blank:]' '\n' |
+
+#remove repeated blank lines
+tr -s '\n' |
+
+#remove all English words
+sed '/<tr>/,/\/td>/d' |
+
+#remove all the HTML tags. But this command will result in blank spaces
+sed 's:<[^>]*>::g' |
+
+#remove repeated blank lines
+tr -s '\n' |
+
+#replace all upper letters into their lower complements
+tr '[:upper:]' '[:lower:]' |
+
+#replace the ASCII grave accent "`" with ASCII apostrophe "'"
+tr '`' "'" |
+
+#delete any \r\n carriage return
+sed 's:\r:\n:g' |
+
+#delete all commas
+tr -d , |
+
+#replace all "'" with "1"
+tr "'" "1" |
+
+#reject any entries that contains non-hawaiian characters
+sed '/[^pk1mnwlhaeiou]/d' |
+
+#replace all "1" with "'"
+tr "1" "'" |
+
+#sort the file
+sort -u
+
+#delete first blank line
+sed '1d'
+
+26. . / b u i l d w o r d s . s h SP < SP E 2 H . t x t SP > SP h w o r d s
+I executed the buildwords script to check whether it worked.
+
+27. c a t SP E 2 H . t x t SP | SP . / b u i l d w o r d s SP | SP l e s s
+I checked whether the buildwords script worked on the website
+
+28. c a t SP a s s i g n 2 . t x t SP | SP t r SP - c s SP ' A - Z a - z '
+SP ' [ \ n * ] ' SP | SP t r SP [ : u p p e r : ] SP [ : l o w e r : ] SP |
+SP s o r t SP - u SP | SP c o m m SP - 2 3 SP - SP w o r d s SP | SP w c SP
+- l
+"misspelled" English words: 39
+
+29. c a t SP a s s i g n 2 . t x t SP | SP t r SP - c s SP ' A - Z a - z '
+SP ' [ \ n * ] ' SP | SP t r SP [ : u p p e r : ] SP [ : l o w e r : ] SP |
+SP s o r t SP - u SP | SP c o m m SP - 2 3 SP - SP w o r d s SP | SP w c SP
+- l
+"misspelled" Hawaiian words: 406
