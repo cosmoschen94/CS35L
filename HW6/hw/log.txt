@@ -1,0 +1,54 @@
+Siyu Chen
+11/04/2015
+Lab Partner: Jiuru Shao
+
+
+Lab Environment Setup:
+
+Using Ubuntu:
+$ dpkg --get-selections | grep openssh
+Output:
+openssh-client  install
+
+So I did the following to install server side:
+$ sudo apt-get install openssh-server
+
+
+Server-side:
+I first generated public and private keys:
+$ ssh-keygen
+
+Then I created an account for my lab partner on the server:
+$ sudo useradd -d /home/lab6 -m shaojiuru
+$ sudo passwd shaojiuru
+
+Then I created .ssh directory for my partner:
+$ cd /home/shaojiuru
+$ sudo mkdir .ssh
+
+Then I changed ownership and permission on .ssh directory:
+$ sudo chown -R shaojiuru .ssh
+$ sudo chmod 700 .ssh
+
+I also disabled password-based authentication:
+$ emacs /etc/ssh/sshd_config
+Then changed PasswordAuthentication option to no.
+
+Client-side:
+
+First I generated public and private keys:
+$ ssh-keygen
+
+Then I copied my public key to the server for key-based authentication
+$ ssh-copy-id -i chensiyu@10.85.97.173
+
+Then added private key to authentication agent:
+$ ssh-add
+
+After that, I SSH to my lab partner's server by enabling X11 forwarding:
+$ ssh -X chensiyu@10.85.97.173
+
+Finally, I tried to run a command on the remote host to open firefox on my computer:
+$firefox
+
+And it worked!
