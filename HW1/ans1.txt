@@ -1,0 +1,101 @@
+
+1. m a n SP - k  
+
+2. w h i c h SP c p
+
+/usr/bin/cp
+
+w h i c h SP w c
+
+/usr/bin/wc
+
+3. f i n d SP / u s r / b i n SP - n a m e SP " ? " SP - e x e c u t a b l e
+
+/usr/bin/[
+part of shell builtin test
+
+/usr/bin/w
+show who is logged on and what they are doing
+
+/usr/bin/X -> Xorg
+Xorg is a full featured X server that was originally designed for UNIX and
+UNIX-like operating systems running on Intel x86 hardward.
+
+4. r e a d l i n k SP / u s r / b i n / c c
+
+gcc
+
+5. m a n SP c h m o d
+
+deny set-group-ID-on-Execution permission to group
+
+6. f i n d - m t i m e SP - 3
+
+7. f i n d SP - t y p e SP d SP - m t i m e SP - 3
+
+8. f i n d SP / u s r / b i n SP - t y p e SP l SP - l s SP | SP w c SP - 
+l
+
+231
+
+9. f i n d SP / u s r / l i b SP - t y p e SP f SP | SP l s SP - l t SP | 
+SP t a i l SP - 1
+
+sse2
+
+10. m a n SP l o c a l e d e f
+The data comes from the current locale environment, or all locales, to sta
+ndard output from LC_* environment variables, which includes LC_CTYPE, LC_
+COLLATE, LC_TIME, LC_NUMERIC, LC_MONETARY, and LC_MESSAGES.
+
+11. C-h a s o r t Enter
+M-x sort-lines
+M-x sort-paragraphs
+M-x sort-pages
+M-x sort-fields
+M-x sort-numeric-fields
+M-x sort-columns
+M-x reverse-region
+M-x Buffer-menu-sort
+M-x sort-regexp-fields
+M-x tabulated-list-col-sort
+M-x tabulated-list-sort
+
+12. C-h b
+C-a go to line beginning
+C-b move one character backward
+C-c exit-recursive-edit or mode-specific-command-prefix
+C-d delete one character forward
+C-e go to line end
+C-f move one character forward
+C-g abort partially typed or executing command or current search
+C-h help-command
+C-i Indent line or region in proper way for current major mode or inset a
+ tab
+C-j replace a Return character
+C-k kill line(to end of)
+C-l redraw garbaged screen or scroll current line to center, top, bottom
+C-m insert a new line, then move to left margin of the new line if it's bl
+ank
+C-n next line
+C-o open file in other window but don't change there
+C-p previous line
+C-q use this when C-s causes the display to freeze or quoted-insert
+C-r search backward or repeat backward
+C-s search forward or repeat incremental search
+C-t transpose characters
+C-u repeat the following commands 4 times or universal argument
+C-v scroll to next screen or one page up
+C-w kill region
+C-x Control-X-prefix
+C-y yank back last thing killed
+C-z suspend Emacs
+
+13. abort partially typed or executing command or current search
+
+14. reinserting text previously killed
+
+15. c d SP / u s r / b i n
+C-x d Backspace Backspace / u s r / b i n Enter 
+They differs in coloring of different kind of files
+

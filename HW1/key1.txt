@@ -1,0 +1,74 @@
+Exer1.1
+1.1.2 C-s A S Enter
+1.1.3 M-< C-s I n Enter
+1.1.4 M-< C-s H Enter M-b
+1.1.5 M-< C-s h u Enter M-b
+1.1.6 C-e
+1.1.7 C-a
+1.1.8 M-<
+1.1.9 No
+
+Exer1.2
+1.2.2 M-g g 1 8 Enter C-k
+1.2.3 M-< C-s D E Enter C-a C-k
+1.2.4 M-< C-s < ! - - Enter C-a M-k M-k
+1.2.5 M-< C-s < ! - Enter M-b M-f C-SP M-f C-u C-b C-w 
+
+Exer1.3
+1.3.2 C-s A Enter M-f M-f Backspace 3 7 C-s A Enter M-f M-f Backspace 3 7
+1.3.3 M-< C-s U T Enter C-b C-SP C-e C-b C-b C-w S - A S C I I
+1.3.4 M-< C-s < o Enter C-e C-o
+1.3.5 d i f f SP - u SP e x e r 1 . h t m l SP e x e r 3 . h t m l SP > e 
+x e r 3 . d i f f
+
+Exer1.4
+1.4.1 c a t SP e x e r 2 . h t m l SP e x e r 2 . d i f f SP > e x e r 4 .
+ h t m l
+1.4.3 M-> M-g g 3 8 4 Enter C-f C-SP C-e M-w M-< C-s < p > s h Enter C-a C
+-SP C-e Backspace C-y
+1.4.4 M-> M-g g 3 7 3 Enter C-f C-SP C-e C-n C-n M-w M-< C-s m i t < Enter 
+C-n C-n C-y C-a C-f Backspace C-p C-f Backspace M-g g 3 6 6 Enter C-f C-SP 
+C-e M-w M-< C-s a c s < Enter C-n C-n C-y M-g g 3 5 7 Enter C-f C-SP C-n C
+-n C-n M-w M-< C-s n t < Enter C-n C-n C-y Backspace
+1.4.5 M-< C-s - - - C-s Enter C-a C-SP M-> Backspace
+1.4.6 C-/
+1.4.7 M-< C-s - - - C-s Enter C-a < ! - - Enter M-> - - >
+1.4.8 M-x c o u n t - m a t c h e s Enter < o l > Enter
+7 Occurrences
+M-x r e p l a c e - s t r i n g Enter < o l > Enter < O l > Enter
+1.4.9 d i f f SP - u SP e x e r 1 . h t m l SP e x e r 4 . h t m l SP > e 
+x e r 4 . d i f f
+
+Exer1.5
+1.5.1 M-x m a k e - d i r e c t o r y Enter j u n k Enter
+1.5.2 C-x d j u n k Enter C-x b h e l l o . c Enter C-x C-w Enter
+1.5.3 M-x compile Enter h e l l o . c Enter
+1.5.4 C-x b * c o m p i l a t i o n * C-x C-w h e l l o - o u t Enter
+1.5.5 C-x d h e l l o - o u t Enter C-SP M-> M-x a p p e n d - t o - f i l
+ e Enter ~ / h w / k e y 1 . t x t
+
+ Exer1.6
+ 1.6.1 C-x b Enter
+ 1.6.2 ( r a n d o m ) C-j
+ 1.6.3 ( s e t q SP x SP ( r a n d o m ) ) C-j ( s e t q SP y SP ( r a n d
+  o m ) ) C-j ( s e t q SP z SP ( r a n d o m ) ) C-j
+ 1.6.4 ( * SP x SP y SP z ) C-j
+ 1.6.5 M-: ( * SP x SP y SP z ) Enter 
+ They are the same.
+ 1.6.6 No they are not. These random numbers are actually pseudo-random num
+ bers and they are generated from a "seed". The random function always gene
+ rates the same sequence of numbers based on the "seed".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
